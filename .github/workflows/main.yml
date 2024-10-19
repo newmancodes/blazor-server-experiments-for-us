@@ -44,7 +44,7 @@ jobs:
           [ $PIPESTATUS -eq 0 ] || exit $PIPESTATUS
 
       - name: Write Validation Deployment Output to Pull Request
-        if: ${{ github.event_name == 'pull_request' }}
+        if: ${{ github.event_name == 'pull_request' && always() }}
         uses: ./.github/actions/upload-file-as-issue-comment
         with:
           pull-request-number: ${{ github.event.number }}
@@ -58,12 +58,13 @@ jobs:
           [ $PIPESTATUS -eq 0 ] || exit $PIPESTATUS
 
       - name: Write What-If Deployment Output to Pull Request
-        if: ${{ github.event_name == 'pull_request' }}
+        if: ${{ github.event_name == 'pull_request' && always() }}
         uses: ./.github/actions/upload-file-as-issue-comment
         with:
           pull-request-number: ${{ github.event.number }}
           label: 'Output from What-If Deployment'
           path-to-file: './whatif-deployment.json'
+          file-format: 'text'
 
   deploy:
     if: ${{ github.event_name == 'push' }}

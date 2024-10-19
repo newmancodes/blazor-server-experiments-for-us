@@ -7,6 +7,9 @@ inputs:
     description: The label to apply
   path-to-file:
     description: The path to the file to include in the comment
+  file-format:
+    description: The format of the file
+    default: 'json'
 
 runs:
   using: composite
@@ -45,6 +48,6 @@ runs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: ${{ inputs.pull-request-number }},
-              body: `### ${{ inputs.label }}.\n\n\`\`\`json\n${fileContent}\n\`\`\``
+              body: `### ${{ inputs.label }}.\n\n\`\`\`${{ inputs.file-format }}\n${fileContent}\n\`\`\``
             });
           });
