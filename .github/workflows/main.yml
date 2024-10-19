@@ -70,7 +70,7 @@ jobs:
 
             console.log(existingComments);
 
-            for (const comment of existingComments) {
+            for (const comment of existingComments.data) {
               if (comment.body.startsWith('### Output from Deployment Validation')) {
                 await github.rest.issues.deleteComment({
                   owner: context.repo.owner,
