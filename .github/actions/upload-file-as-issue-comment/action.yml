@@ -18,11 +18,33 @@ runs:
 				script: |
 					const fs = require('fs');
 
-					var fileContent;
-					await fs.readFile(${{ inputs.path-to-file }}), 'utf8', function read(err, data) {
+					var existingComments = await github.rest.issues.listComments({
+						owner: context.repo.owner,
+						repo: context.repo.repo,
+						issue_number: ${{ inputs.pull-request-number }}
+					});
+
+					for (const comment of existingComments.data) {
+						if (comment.body.startsWith('### ${{ inputs.label }}.')) {
+							await github.rest.issues.deleteComment({
+								owner: context.repo.owner,
+								repo: context.repo.repo,
+								comment_id: comment.id
+							});
+						}
+					}
+
+					await fs.readFile(${{ inputs.path-to-file }}, 'utf8', async function read(err, data) {
 						if (err) {
 							throw err;
 						}
 							
-						fileContent = data;
+						const fileContent = data;
+
+						await github.rest.issues.createComment({
+							owner: context.repo.owner,
+							repo: context.repo.repo,
+							issue_number: ${{ inputs.pull-request-number }},
+							body: `### ${{ inputs.label }}.\n\n\`\`\`json\n${fileContent}\n\`\`\``
+						});
 					});
