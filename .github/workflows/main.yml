@@ -43,7 +43,7 @@ jobs:
       - name: Validate Deployment
         id: validate-deployment
         run: |
-          validationResults=$(az deployment sub validate --name beus-main-val-${{ github.run_number }}-${{ github.run_attempt }} --location uksouth --template-file ./bicep/entry-point.bicep --parameters @./bicep/.parameters/entry-point.devl.uksouth.json)
+          validationResults=$(az deployment sub validate --name beus-main-val-${{ github.run_number }}-${{ github.run_attempt }} --location uksouth --template-file ./bicep/entry-point.bicep --parameters @./bicep/.parameters/entry-point.devl.uksouth.json | base64)
           echo "validationResults=$validationResults" >> "$GITHUB_OUTPUT"
 
       - name: Write Validation Deployment Output to Pull Request
