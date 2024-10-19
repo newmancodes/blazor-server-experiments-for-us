@@ -60,10 +60,10 @@ jobs:
               jsonContent = data;
             });
 
-            github.rest.pulls.createReviewComment({
+            github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              pull_number: ${{ github.event.number }},
+              issue_number: ${{ github.event.number }},
               body: jsonContent
             });
 
