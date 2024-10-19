@@ -41,22 +41,29 @@ jobs:
         run: az bicep build-params --file ./bicep/.parameters/entry-point.devl.uksouth.bicepparam
 
       - name: Validate Deployment
-        id: validate-deployment
-        run: |
-          validationResults=$(az deployment sub validate --name beus-main-val-${{ github.run_number }}-${{ github.run_attempt }} --location uksouth --template-file ./bicep/entry-point.bicep --parameters @./bicep/.parameters/entry-point.devl.uksouth.json | base64 -w 0)
-          echo $validationResults
-          echo "validationResults=$validationResults" >> "$GITHUB_OUTPUT"
+        run: az deployment sub validate --name beus-main-val-${{ github.run_number }}-${{ github.run_attempt }} --location uksouth --template-file ./bicep/entry-point.bicep --parameters @./bicep/.parameters/entry-point.devl.uksouth.json | tee ./validate-deployment.json
 
       - name: Write Validation Deployment Output to Pull Request
         if: ${{ github.event_name == 'pull_request' }}
         uses: actions/github-script@v7
         with:
           script: |
+            require 'fs';
+
+            var jsonContent;
+            fs.readFile('./validate-deployment.json', function read(err, data) {
+              if (err) {
+                throw err;
+              }
+                
+              jsonContent = data;
+            });
+
             github.rest.pulls.createReviewComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               pull_number: ${{ github.event.number }},
-              body: $validationResults
+              body: jsonContent
             });
 
       - name: Perform What-If Deployment
