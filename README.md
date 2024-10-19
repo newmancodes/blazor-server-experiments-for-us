@@ -1,5 +1,7 @@
 # Blazor Server Experiments for US
 
+[![CI/CD Solution Management](https://github.com/newmancodes/blazor-server-experiments-for-us/actions/workflows/main.yml/badge.svg)](https://github.com/newmancodes/blazor-server-experiments-for-us/actions/workflows/main.yml)
+
 ## GitHub Environments
 
 Required Environments:
