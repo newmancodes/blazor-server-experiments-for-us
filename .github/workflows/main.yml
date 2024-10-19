@@ -68,6 +68,8 @@ jobs:
               issue_number: ${{ github.event.number }}
             });
 
+            console.log(existingComments);
+
             for (const comment of existingComments) {
               if (comment.body.startsWith('### Output from Deployment Validation')) {
                 await github.rest.issues.deleteComment({

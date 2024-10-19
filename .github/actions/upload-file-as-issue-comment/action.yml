@@ -1,0 +1,28 @@
+name: Upload File as Issue Comment
+
+inputs:
+	pull-request-number:
+		description: The number of the pull request to attach the file's payload to
+	label:
+		description: The label to apply
+	path-to-file:
+		description: The path to the file to include in the comment
+
+runs:
+	using: composite
+
+	steps:
+		- name: Write File to Pull Request
+			uses: actions/github-script@v7
+			with:
+				script: |
+					const fs = require('fs');
+
+					var fileContent;
+					await fs.readFile(${{ inputs.path-to-file }}), 'utf8', function read(err, data) {
+						if (err) {
+							throw err;
+						}
+							
+						fileContent = data;
+					});
