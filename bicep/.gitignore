@@ -1,0 +1,2 @@
+# Ignore locally built bicep files and bicep param files (via az bicep build and az bicep build-param)
+**/*.json

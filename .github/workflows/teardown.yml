@@ -1,0 +1,22 @@
+name: Teardown Deployment
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    environment: devl
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Sign in to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_DEPLOYMENT_APP_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_DEPLOYMENT_APP_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_DEPLOYMENT_APP_SUBSCRIPTION_ID }}
+
+      - name: Deploy Infrastructure
+        run: az stack sub delete --name BEUS --action-on-unmanage deleteAll --template-file ./bicep/entry-point.bicep --parameters @./bicep/.parameters/entry-point.devl.uksouth.bicepparam
