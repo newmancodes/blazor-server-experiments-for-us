@@ -34,7 +34,7 @@ runs:
             }
           }
 
-          await fs.readFile('${{ inputs.path-to-file }}'', 'utf8', async function read(err, data) {
+          await fs.readFile('${{ inputs.path-to-file }}', 'utf8', async function read(err, data) {
             if (err) {
               throw err;
             }
