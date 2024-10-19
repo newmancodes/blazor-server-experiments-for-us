@@ -53,22 +53,11 @@ jobs:
           script: |
             const fs = require('fs');
 
-            var jsonContent;
-            await fs.readFile('./validate-deployment.json', 'utf8', function read(err, data) {
-              if (err) {
-                throw err;
-              }
-                
-              jsonContent = data;
-            });
-
             var existingComments = await github.rest.issues.listComments({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: ${{ github.event.number }}
             });
-
-            console.log(existingComments);
 
             for (const comment of existingComments.data) {
               if (comment.body.startsWith('### Output from Deployment Validation')) {
@@ -80,11 +69,19 @@ jobs:
               }
             }
 
-            await github.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: ${{ github.event.number }},
-              body: `### Output from Deployment Validation.\n\n\`\`\`json\n${jsonContent}\n\`\`\``
+            await fs.readFile('./validate-deployment.json', 'utf8', async function read(err, data) {
+              if (err) {
+                throw err;
+              }
+                
+              const fileContent = data;
+
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: ${{ github.event.number }},
+                body: `### Output from Deployment Validation.\n\n\`\`\`json\n${fileContent}\n\`\`\``
+              });
             });
 
       - name: Perform What-If Deployment
