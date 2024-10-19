@@ -54,11 +54,12 @@ jobs:
       - name: Perform What-If Deployment
         id: perform-whatif-deployment
         run: |
-          az deployment sub what-if --name beus-main-pln-${{ github.run_number }}-${{ github.run_attempt }} --location uksouth --template-file ./bicep/entry-point.bicep --parameters ./bicep/.parameters/entry-point.devl.uksouth.bicepparam | tee ./whatif-deployment.json
+          az deployment sub what-if --name beus-main-pln-${{ github.run_number }}-${{ github.run_attempt }} --location uksouth --template-file ./bicep/entry-point.bicep --parameters ./bicep/.parameters/entry-point.devl.uksouth.bicepparam | tee ./whatif-deployment.txt
           [ $PIPESTATUS -eq 0 ] || exit $PIPESTATUS
 
       - name: Debug
-        run: cat ./whatif-deployment.json
+        if: ${{ always() }}
+        run: cat ./whatif-deployment.txt
 
       - name: Write What-If Deployment Output to Pull Request
         if: ${{ github.event_name == 'pull_request' && always() }}
@@ -66,7 +67,7 @@ jobs:
         with:
           pull-request-number: ${{ github.event.number }}
           label: 'Output from What-If Deployment'
-          path-to-file: './whatif-deployment.json'
+          path-to-file: './whatif-deployment.txt'
           file-format: 'text'
 
   deploy:
