@@ -41,10 +41,12 @@ jobs:
         run: az bicep build-params --file ./bicep/.parameters/entry-point.devl.uksouth.bicepparam
 
       - name: Validate Deployment
-        run: az deployment sub validate --name beus-main-val-${{ github.run_number }}-${{ github.run_attempt }} --location uksouth --template-file ./bicep/entry-point.bicep --parameters @./bicep/.parameters/entry-point.devl.uksouth.json
+        run: |
+          validationResults=$(az deployment sub validate --name beus-main-val-${{ github.run_number }}-${{ github.run_attempt }} --location uksouth --template-file ./bicep/entry-point.bicep --parameters @./bicep/.parameters/entry-point.devl.uksouth.json)
 
       - name: Perform What-If Deployment
-        run: az deployment sub what-if --name beus-main-pln-${{ github.run_number }}-${{ github.run_attempt }} --location uksouth --template-file ./bicep/entry-point.bicep --parameters @./bicep/.parameters/entry-point.devl.uksouth.json
+        run: |
+          whatIfResults=$(az deployment sub what-if --name beus-main-pln-${{ github.run_number }}-${{ github.run_attempt }} --location uksouth --template-file ./bicep/entry-point.bicep --parameters @./bicep/.parameters/entry-point.devl.uksouth.json)
 
   deploy:
     if: ${{ github.event_name == 'push' }}
