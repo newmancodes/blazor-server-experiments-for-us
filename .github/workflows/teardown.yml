@@ -8,6 +8,10 @@ jobs:
     environment: devl
     runs-on: ubuntu-latest
 
+    permissions:
+      id-token: write
+      contents: read
+
     steps:
       - uses: actions/checkout@v4
 
@@ -18,5 +22,5 @@ jobs:
           tenant-id: ${{ secrets.AZURE_DEPLOYMENT_APP_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_DEPLOYMENT_APP_SUBSCRIPTION_ID }}
 
-      - name: Deploy Infrastructure
+      - name: Remove Deployed Infrastructure
         run: az stack sub delete --name BEUS --action-on-unmanage deleteAll --template-file ./bicep/entry-point.bicep --parameters @./bicep/.parameters/entry-point.devl.uksouth.bicepparam

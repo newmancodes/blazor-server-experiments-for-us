@@ -19,7 +19,7 @@ var standardTags = {
   owner: 'steve.newman@digital'
 }
 
-resource resourceGroup 'Microsoft.Resources/resourceGroups@2024-07-01' = {
+resource resourceGroup 'Microsoft.Resources/resourceGroups@2024-03-01' = {
   location: location
   name: 'rg-${environmentName}-${locationShortForm}-${solutionSuffix}'
   tags: standardTags
