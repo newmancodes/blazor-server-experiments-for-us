@@ -58,7 +58,6 @@ jobs:
               }
                 
               jsonContent = data;
-              console.log(jsonContent);
             });
 
             github.rest.issues.createComment({
@@ -66,6 +65,7 @@ jobs:
               repo: context.repo.repo,
               issue_number: ${{ github.event.number }},
               body: jsonContent
+              links: []
             });
 
       - name: Perform What-If Deployment
