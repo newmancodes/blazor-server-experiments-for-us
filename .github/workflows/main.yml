@@ -48,41 +48,11 @@ jobs:
 
       - name: Write Validation Deployment Output to Pull Request
         if: ${{ github.event_name == 'pull_request' }}
-        uses: actions/github-script@v7
+        uses: ./.github/actions/upload-file-as-issue-comment
         with:
-          script: |
-            const fs = require('fs');
-
-            var existingComments = await github.rest.issues.listComments({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: ${{ github.event.number }}
-            });
-
-            for (const comment of existingComments.data) {
-              if (comment.body.startsWith('### Output from Deployment Validation')) {
-                await github.rest.issues.deleteComment({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  comment_id: comment.id
-                });
-              }
-            }
-
-            await fs.readFile('./validate-deployment.json', 'utf8', async function read(err, data) {
-              if (err) {
-                throw err;
-              }
-                
-              const fileContent = data;
-
-              await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: ${{ github.event.number }},
-                body: `### Output from Deployment Validation.\n\n\`\`\`json\n${fileContent}\n\`\`\``
-              });
-            });
+          pull-request-number: ${{ github.event.number }}
+          label: 'Output from Deployment Validation'
+          path-to-file: './validate-deployment.json'
 
       - name: Perform What-If Deployment
         id: perform-whatif-deployment
