@@ -23,4 +23,9 @@ jobs:
           subscription-id: ${{ secrets.AZURE_DEPLOYMENT_APP_SUBSCRIPTION_ID }}
 
       - name: Remove Deployed Infrastructure
-        run: az stack sub delete --name BEUS --action-on-unmanage deleteAll --template-file ./bicep/entry-point.bicep --parameters @./bicep/.parameters/entry-point.devl.uksouth.bicepparam
+        run: |
+          az stack sub delete --name BEUS --action-on-unmanage deleteAll --yes |& ./stack-delete.json
+          [ $PIPESTATUS -eq 0 ] || exit $PIPESTATUS
+      
+      - name: Debugging
+        run: cat ./stack-delete.json

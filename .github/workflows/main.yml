@@ -87,4 +87,9 @@ jobs:
           subscription-id: ${{ secrets.AZURE_DEPLOYMENT_APP_SUBSCRIPTION_ID }}
 
       - name: Deploy Infrastructure
-        run: az stack sub create --name BEUS --description 'Blazor Server Experiments for US' --location uksouth --deny-settings-mode denyWriteAndDelete --action-on-unmanage deleteAll --template-file ./bicep/entry-point.bicep --parameters @./bicep/.parameters/entry-point.devl.uksouth.bicepparam
+        run: |
+          az stack sub create --name BEUS --description 'Blazor Server Experiments for US' --location uksouth --deny-settings-mode denyWriteAndDelete --action-on-unmanage deleteAll --template-file ./bicep/entry-point.bicep --parameters ./bicep/.parameters/entry-point.devl.uksouth.bicepparam |& ./stack-create.json
+          [ $PIPESTATUS -eq 0 ] || exit $PIPESTATUS
+      
+      - name: Debugging
+        run: cat ./stack-create.json
