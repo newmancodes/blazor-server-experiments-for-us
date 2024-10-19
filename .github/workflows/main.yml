@@ -52,7 +52,7 @@ jobs:
             const fs = require('fs');
 
             var jsonContent;
-            fs.readFile('./validate-deployment.json', function read(err, data) {
+            await fs.readFile('./validate-deployment.json', 'utf8', function read(err, data) {
               if (err) {
                 throw err;
               }
