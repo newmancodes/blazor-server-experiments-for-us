@@ -62,7 +62,7 @@ jobs:
               jsonContent = data;
             });
 
-            github.rest.issues.createComment({
+            await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: ${{ github.event.number }},
@@ -72,6 +72,29 @@ jobs:
       - name: Perform What-If Deployment
         id: perform-whatif-deployment
         run: az deployment sub what-if --name beus-main-pln-${{ github.run_number }}-${{ github.run_attempt }} --location uksouth --template-file ./bicep/entry-point.json --parameters @./bicep/.parameters/entry-point.devl.uksouth.json | tee ./whatif-deployment.json
+
+      - name: Write What-If Deployment Output to Pull Request
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+
+            var jsonContent;
+            await fs.readFile('./whatif-deployment.json', 'utf8', function read(err, data) {
+              if (err) {
+                throw err;
+              }
+                
+              jsonContent = data;
+            });
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: ${{ github.event.number }},
+              body: `### Output from What-If Validation.\n\n\`\`\`json\n${jsonContent}\n\`\`\``
+            });
 
   deploy:
     if: ${{ github.event_name == 'push' }}
