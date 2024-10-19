@@ -38,7 +38,7 @@ runs:
             if (err) {
               throw err;
             }
-							
+
             const fileContent = data;
 
             await github.rest.issues.createComment({
