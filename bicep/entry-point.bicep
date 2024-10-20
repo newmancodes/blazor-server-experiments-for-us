@@ -36,3 +36,23 @@ module monitoring 'monitoring.bicep' = {
     standardTags: standardTags
   }  
 }
+
+resource appResourceGroup 'Microsoft.Resources/resourceGroups@2024-03-01' = {
+  location: location
+  name: 'rg-${environmentName}-${locationShortForm}-${solutionSuffix}-app'
+  tags: standardTags
+}
+
+module webApp 'app.bicep' = {
+  name: 'app'
+  scope: appResourceGroup
+  params: {
+    location: location
+    locationShortForm: locationShortForm
+    environmentName: environmentName
+    solutionSuffix: solutionSuffix
+    standardTags: standardTags
+    logAnalyticsWorkspaceId: monitoring.outputs.logAnalyticsWorkspaceId
+    // applicationInsightsConnectionString: monitoring.outputs.applicationInisghtsConnectionString
+  }
+}
