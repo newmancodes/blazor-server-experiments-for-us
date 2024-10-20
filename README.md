@@ -2,6 +2,15 @@
 
 [![CI/CD Solution Management](https://github.com/newmancodes/blazor-server-experiments-for-us/actions/workflows/main.yml/badge.svg)](https://github.com/newmancodes/blazor-server-experiments-for-us/actions/workflows/main.yml)
 
+## RBAC Role Assignments
+
+The service principal used to deploy must receive the following RBAC Role Assignments:
+
+| RBAC Role | Scope |
+|-|-|
+| Contributor | Subscription |
+| Azure Deployment Stack Owner | Subscription |
+
 ## GitHub Environments
 
 Required Environments:
