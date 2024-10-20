@@ -3,6 +3,10 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorServer.Experiments.Web", "src\BlazorServer.Experiments.Web\BlazorServer.Experiments.Web.csproj", "{89ABC43B-D419-4878-B5E3-CF4644B12780}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorServer.Experiments.Web.Tests", "tests\BlazorServer.Experiments.Web.Tests\BlazorServer.Experiments.Web.Tests.csproj", "{EDEC24EE-6414-45BC-B538-5EA07FCB4A00}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -10,5 +14,15 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{89ABC43B-D419-4878-B5E3-CF4644B12780}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89ABC43B-D419-4878-B5E3-CF4644B12780}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89ABC43B-D419-4878-B5E3-CF4644B12780}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89ABC43B-D419-4878-B5E3-CF4644B12780}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EDEC24EE-6414-45BC-B538-5EA07FCB4A00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDEC24EE-6414-45BC-B538-5EA07FCB4A00}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDEC24EE-6414-45BC-B538-5EA07FCB4A00}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDEC24EE-6414-45BC-B538-5EA07FCB4A00}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

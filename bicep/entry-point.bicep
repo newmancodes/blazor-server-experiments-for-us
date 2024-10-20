@@ -19,15 +19,15 @@ var standardTags = {
   owner: 'steve.newman@digital'
 }
 
-resource resourceGroup 'Microsoft.Resources/resourceGroups@2024-03-01' = {
+resource logResourceGroup 'Microsoft.Resources/resourceGroups@2024-03-01' = {
   location: location
-  name: 'rg-${environmentName}-${locationShortForm}-${solutionSuffix}'
+  name: 'rg-${environmentName}-${locationShortForm}-${solutionSuffix}-log'
   tags: standardTags
 }
 
 module monitoring 'monitoring.bicep' = {
   name: 'monitoring'
-  scope: resourceGroup
+  scope: logResourceGroup
   params: {
     location: location
     locationShortForm: locationShortForm

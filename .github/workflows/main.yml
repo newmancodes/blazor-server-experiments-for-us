@@ -66,9 +66,26 @@ jobs:
           path-to-file: './whatif-deployment.txt'
           file-format: 'text'
 
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.x'
+
+      - name: Build
+        run: dotnet build --configuration Release
+
+      - name: Test
+        run: dotnet test
+
   deploy:
     if: ${{ github.event_name == 'push' }}
-    needs: [ validate-bicep-files ]
+    needs: [ validate-bicep-files, build-and-test ]
     environment: devl
     runs-on: ubuntu-latest
 

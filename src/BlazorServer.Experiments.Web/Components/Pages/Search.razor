@@ -1,0 +1,30 @@
+@page "/search/{rawSpecification?}"
+
+<h3>Search Results</h3>
+
+<SearchBox Specification="@SearchSpecification" />
+
+<section>
+    
+</section>
+
+@if (IsLoading)
+{
+    <section id="results">
+        <div>Patience...</div>
+    </section>
+}
+else
+{
+    <section id="results">
+        <div>You searched for @SearchSpecification.SearchTerm at @DateTime.UtcNow.ToString("o").</div>
+        <br />
+        @foreach (var result in Results)
+        {
+            <article>
+                <h4>@result.Title</h4>
+                <sub>@result.Id</sub>
+            </article>
+        }
+    </section>
+}
