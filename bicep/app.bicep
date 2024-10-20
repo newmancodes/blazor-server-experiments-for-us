@@ -39,12 +39,6 @@ resource appServicePlanLogsToAnalytics 'Microsoft.Insights/diagnosticSettings@20
   name: 'aspLogToAnalytics'
   properties: {
     workspaceId: logAnalyticsWorkspaceId
-    logs: [
-      {
-        category: 'AllLogs'
-        enabled: true
-      }
-    ]
     metrics: [
       {
         category: 'AllMetrics'
