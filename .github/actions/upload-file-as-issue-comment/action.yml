@@ -1,25 +1,34 @@
-name: Upload File as Issue Comment
+name: Upload File as Pull Request Comment
+description: Uploads a file as a comment to a pull request, replacing any existing comment with the same label
 
 inputs:
   pull-request-number:
-    description: The number of the pull request to attach the files payload to
+    description: The number of the pull request to attach the file's payload to
+    required: true
   label:
-    description: The label to apply
+    description: The label to apply (this is used to ensure this is only comment per label)
+    required: true
   path-to-file:
     description: The path to the file to include in the comment
+    required: true
   file-format:
-    description: The format of the file
+    description: The format of the file (this is used to inform the markdown code block)
+    required: false
     default: 'json'
+  file-format:
+    description: The encoding of the file (this is used when reading the file)
+    required: false
+    default: 'utf8'
 
 runs:
-  using: composite
+  using: "composite"
 
   steps:
     - name: Write File to Pull Request
-      uses: actions/github-script@v7
+      uses: actions/github-script@v8
       with:
         script: |
-          const fs = require('fs');
+          const fs = require('fs').promises;
 
           var existingComments = await github.rest.issues.listComments({
             owner: context.repo.owner,
@@ -28,7 +37,7 @@ runs:
           });
 
           for (const comment of existingComments.data) {
-            if (comment.body.startsWith('### ${{ inputs.label }}.')) {
+            if (comment.body.startsWith('### ${{ inputs.label }}')) {
               await github.rest.issues.deleteComment({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
@@ -37,17 +46,17 @@ runs:
             }
           }
 
-          await fs.readFile('${{ inputs.path-to-file }}', 'utf8', async function read(err, data) {
-            if (err) {
-              throw err;
-            }
+          let fileContent;
+          try {
+            fileContent = await fs.readFile('${{ inputs.path-to-file }}', { encoding: '${{ inputs.file-encoding }}' });
+          } catch (err) {
+            fileContent = `Error reading file: ${err.message}`;
+          }
 
-            const fileContent = data;
-
-            await github.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: ${{ inputs.pull-request-number }},
-              body: `### ${{ inputs.label }}.\n\n\`\`\`${{ inputs.file-format }}\n${fileContent}\n\`\`\``
-            });
+          await github.rest.issues.createComment({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: ${{ inputs.pull-request-number }},
+            body: `### ${{ inputs.label }}\n\n\`\`\`${{ inputs.file-format }}\n${fileContent}\n\`\`\``
           });
+        });
