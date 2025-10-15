@@ -30,7 +30,7 @@ runs:
         script: |
           const fs = require('fs').promises;
 
-          var existingComments = await github.rest.issues.listComments({
+          const existingComments = await github.rest.issues.listComments({
             owner: context.repo.owner,
             repo: context.repo.repo,
             issue_number: ${{ inputs.pull-request-number }}
@@ -59,4 +59,3 @@ runs:
             issue_number: ${{ inputs.pull-request-number }},
             body: `### ${{ inputs.label }}\n\n\`\`\`${{ inputs.file-format }}\n${fileContent}\n\`\`\``
           });
-        });
