@@ -15,7 +15,7 @@ inputs:
     description: The format of the file (this is used to inform the markdown code block)
     required: false
     default: 'json'
-  file-format:
+  file-encoding:
     description: The encoding of the file (this is used when reading the file)
     required: false
     default: 'utf8'
