@@ -38,6 +38,34 @@ jobs:
           tenant-id: ${{ secrets.AZURE_DEPLOYMENT_APP_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_DEPLOYMENT_APP_SUBSCRIPTION_ID }}
 
+      - name: Validate Deployment
+        run: |
+          az deployment sub validate --name beus-main-val-${{ github.run_number }}-${{ github.run_attempt }} --location uksouth --template-file ./bicep/entry-point.bicep --parameters ./bicep/.parameters/entry-point.devl.uksouth.bicepparam |& tee ./validate-deployment.json
+          [ $PIPESTATUS -eq 0 ] || exit $PIPESTATUS
+
+      - name: Write Validation Deployment Output to Pull Request
+        if: ${{ github.event_name == 'pull_request' && always() }}
+        uses: ./.github/actions/upload-file-as-issue-comment
+        with:
+          pull-request-number: ${{ github.event.number }}
+          label: 'Output from Validation Deployment'
+          path-to-file: './validate-deployment.json'
+
+      - name: Perform What-If Deployment
+        id: perform-whatif-deployment
+        run: |
+          az deployment sub what-if --name beus-main-pln-${{ github.run_number }}-${{ github.run_attempt }} --location uksouth --template-file ./bicep/entry-point.bicep --parameters ./bicep/.parameters/entry-point.devl.uksouth.bicepparam |& tee ./whatif-deployment.txt
+          [ $PIPESTATUS -eq 0 ] || exit $PIPESTATUS
+
+      - name: Write What-If Deployment Output to Pull Request
+        if: ${{ github.event_name == 'pull_request' && always() }}
+        uses: ./.github/actions/upload-file-as-issue-comment
+        with:
+          pull-request-number: ${{ github.event.number }}
+          label: 'Output from What-If Deployment'
+          path-to-file: './whatif-deployment.txt'
+          file-format: 'text'
+
   build-and-test:
     runs-on: ubuntu-latest
 
