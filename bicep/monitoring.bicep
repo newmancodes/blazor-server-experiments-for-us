@@ -37,6 +37,16 @@ resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
   }
 }
 
+resource solutionDashboard 'Microsoft.Portal/dashboards@2022-12-01-preview' = {
+  name: 'brd-${environmentName}-${locationShortForm}-${solutionSuffix}'
+  location: location
+  tags: standardTags
+  properties: {
+    lenses: [
+    ]
+  }
+}
+
 output logAnalyticsWorkspaceId string = logAnalyticsWorkspace.id
 output applicationInisghtsConnectionString string = applicationInsights.properties.ConnectionString
 output applicationInsightsInstrumentationKey string = applicationInsights.properties.InstrumentationKey
