@@ -105,7 +105,7 @@ jobs:
 
       - name: Deploy Infrastructure
         run: |
-          az stack sub create --name BEUS --description 'Blazor Server Experiments for US' --location uksouth --deny-settings-mode denyWriteAndDelete --action-on-unmanage detachAll --template-file ./bicep/entry-point.bicep --parameters ./bicep/.parameters/entry-point.devl.uksouth.bicepparam |& tee ./stack-create.json
+          az stack sub create --name BEUS --description 'Blazor Server Experiments for US' --location uksouth --deny-settings-mode denyWriteAndDelete --action-on-unmanage deleteAll --template-file ./bicep/entry-point.bicep --parameters ./bicep/.parameters/entry-point.devl.uksouth.bicepparam |& tee ./stack-create.json
           [ $PIPESTATUS -eq 0 ] || exit $PIPESTATUS
       
       - name: Debugging
