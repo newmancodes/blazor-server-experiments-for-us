@@ -47,3 +47,13 @@ resource appServicePlanLogsToAnalytics 'Microsoft.Insights/diagnosticSettings@20
     ]
   }
 }
+
+resource storage 'Microsoft.Storage/storageAccounts@2025-01-01' = {
+  kind: 'StorageV2'
+  name: 'stg${environmentName}${locationShortForm}${solutionSuffix}'
+  location: location
+  sku: {
+    name: 'Standard_LRS'
+  }
+  tags: standardTags
+}
